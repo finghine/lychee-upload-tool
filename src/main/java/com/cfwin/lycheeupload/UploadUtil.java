@@ -24,6 +24,13 @@ import org.apache.http.message.BasicNameValuePair;
 public class UploadUtil {
 
 	static final String cookiesfile = "cookes";
+	
+	private static String domain = "";//eg: https://xxx.xxx.com
+
+	public static void initDomain(String  domainpar)
+	{
+		domain = domainpar;
+	}
 
 	public static String commonMethodEx(HttpEntity entity) throws Exception, IOException {
 		File cookfile = new File(cookiesfile);
@@ -35,7 +42,7 @@ public class UploadUtil {
 		} else {
 			cookieStore = new BasicCookieStore();
 		}
-		String url = "https://img.fengcl.com/php/index.php";
+		String url = domain+"/php/index.php";
 		Executor executor = Executor.newInstance();
 		String res = executor.use(cookieStore).execute(Request.Post(url).body(entity)).returnContent().asString();
 		ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(cookfile));

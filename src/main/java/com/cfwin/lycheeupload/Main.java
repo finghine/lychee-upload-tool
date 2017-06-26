@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -17,12 +18,15 @@ import com.google.gson.JsonParser;
 public class Main {
 
 	public static void main(String[] args) throws Exception {
-		if (args.length != 2) {
-			System.out.println("java -jar lychee <username> <password>");
+		if (args.length != 3) {
+			System.out.println("java -jar lychee <domain> <username> <password>");
+			System.out.println("eg: java -jar lychee https://xxx.xxx.com xxx password");
 			return;
 		}
-		String username = args[0];
-		String password = args[1];
+		String domain= args[0];
+		String username = args[1];
+		String password = args[2];
+		UploadUtil.initDomain(domain);
 		System.out.println(username + ":" + password);
 		run(username, password);
 	}
@@ -31,6 +35,7 @@ public class Main {
 		SimpleDateFormat sf = new SimpleDateFormat("YYYYMMddmmss");
 		String filename = sf.format(new Date()) + ".jpg";
 		boolean res = work(filename);
+			
 		if (res) {
 			String add_res = UploadUtil.photo_add(filename);
 			if (!add_res.matches("\\d*")) {
@@ -39,6 +44,7 @@ public class Main {
 				add_res = UploadUtil.photo_add(filename);
 				if (!add_res.matches("\\d*")) {
 					System.out.println("error:" + add_res);
+					JOptionPane.showMessageDialog(null,"上传失败");
 					return;
 				}
 			}
@@ -68,7 +74,10 @@ public class Main {
 		Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
 		DataFlavor[] list = c.getAvailableDataFlavors();
 		if (list == null)
+		{
+			JOptionPane.showMessageDialog(null,"剪贴板内无内容");
 			return false;
+		}
 		DataFlavor t = list[0];
 		System.out.println("list len:" + list.length);
 		String type = t.getMimeType();
@@ -81,6 +90,10 @@ public class Main {
 			// ByteArrayOutputStream b=new ByteArrayOutputStream();
 			// ImageIO.write(getBufferedImage(img), "png", b);
 			// byte[] imgbys=b.toByteArray();
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null,"剪贴板内无图片");
 		}
 		return false;
 	}
