@@ -28,10 +28,10 @@ public class Main {
 		String password = args[2];
 		UploadUtil.initDomain(domain);
 		System.out.println(username + ":" + password);
-		run(username, password);
+		run(username, password,domain);
 	}
 
-	public static void run(String username, String passowrd) throws Exception {
+	public static void run(String username, String passowrd,String domain) throws Exception {
 		SimpleDateFormat sf = new SimpleDateFormat("YYYYMMddmmss");
 		String filename = sf.format(new Date()) + ".jpg";
 		boolean res = work(filename);
@@ -50,10 +50,9 @@ public class Main {
 			}
 			// get url
 			String resjson = UploadUtil.photo_get("0", add_res);
-			String domin = "https://img.fengcl.com/";
 			String url = getUrlFromJson(resjson);
-			setTextToClipboard(domin + url);
-			System.out.println("OK: " + domin + url);
+			setTextToClipboard(domain + url);
+			System.out.println("OK: " + domain + url);
 		}
 	}
 
